@@ -133,7 +133,7 @@ class SecureVPNApp(ctk.CTk):
         status_dot.pack(side="left", padx=(15, 5), pady=10)
 
         status_text = ctk.CTkLabel(
-            status_frame, text="Ready to Connect • 50+ Locations Available",
+            status_frame, text="Ready to Connect • Many Servers Available",
             font=ctk.CTkFont(size=12, weight="bold"), text_color="#E0E0E0"
         )
         status_text.pack(side="left", padx=(0, 15), pady=10)
@@ -152,7 +152,7 @@ class SecureVPNApp(ctk.CTk):
         section_title.grid(row=0, column=0, sticky="w", pady=(0, 20), columnspan=2)
 
         features = [
-            {"icon": "🛡️", "title": "Military-Grade Encryption", "desc": "AES-256 bit encryption protects all your data", "color": "#4FC3F7"},
+            {"icon": "🛡️", "title": "AES Encryption & Hashing", "desc": "AES-256 bit encryption protects all your data", "color": "#4FC3F7"},
             {"icon": "🌍", "title": "Global Server Network", "desc": "1000+ servers across 50+ countries", "color": "#4CAF50"},
             {"icon": "🚫", "title": "Strict No-Logs Policy", "desc": "We never track or store your activity", "color": "#FF9800"},
             {"icon": "⚡", "title": "Lightning Fast Speeds", "desc": "Optimized servers for streaming & gaming", "color": "#9C27B0"},
@@ -215,7 +215,7 @@ class SecureVPNApp(ctk.CTk):
         )
         stats_frame.pack(fill="x", pady=(0, 20))
 
-        stats_data = [("50+", "Countries", "#4FC3F7"), ("1K+", "Servers", "#4CAF50"),
+        stats_data = [("5", "Secure Nodes", "#4FC3F7"), ("3", "Data Tunnels", "#42A5F5"),
                       ("10ms", "Avg Ping", "#FF9800"), ("∞", "Bandwidth", "#9C27B0")]
 
         for i, (value, label, color) in enumerate(stats_data):
