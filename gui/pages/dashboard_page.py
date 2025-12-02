@@ -3,6 +3,10 @@ from tkinter import messagebox
 import socket
 import threading
 import time
+import tempfile
+import subprocess
+import sys
+import os
 from servers import SERVERS, SERVER_DETAILS
 
 class DashboardPage(ctk.CTkFrame):
@@ -227,35 +231,95 @@ class DashboardPage(ctk.CTkFrame):
 
             threading.Thread(target=connect_thread, daemon=True).start()
 
-    # ------------------ RECEIVE SERVER ------------------ #
     def _receive_server_messages(self):
         try:
             while True:
-                data = self.client_socket.recv(1024)
+                data = self.client_socket.recv(1024).decode(errors="ignore")
                 if not data:
                     break
-                message = data.decode()
-                print(f"[SERVER] {message}")
 
-                if "---Contents of" in message or "alpha1.txt" in message:
-                    # Create a new frame for each file
-                    file_box = ctk.CTkFrame(
-                        self.files_container,
-                        corner_radius=10,
-                        fg_color="#1E3A5F",
-                        border_width=1,
-                        border_color="#00C4FF"
-                    )
-                    file_box.pack(pady=10, padx=5, fill="x")
+                # --------------------- FILE LIST HANDLING --------------------- #
+                if data.startswith("FILE_LIST"):
+                    files = data.replace("FILE_LIST", "").strip().split("\n")
+                    self._display_file_buttons(files)
+                    continue
 
-                    # File content inside the frame
-                    file_label = ctk.CTkLabel(
-                        file_box,
-                        text=message.strip(),
-                        text_color="#E0F7FA",
-                        wraplength=750,  # wrap text to avoid horizontal overflow
-                        justify="left"
-                    )
-                    file_label.pack(padx=10, pady=10)
+                # --------------------- FILE DOWNLOAD HANDLING ---------------- #
+                if data.startswith("FILE_SIZE:"):
+                    filesize = int(data.split(":")[1])
+
+                    # Send ACK to server
+                    self.client_socket.sendall(b"ACK")
+
+                    # Receive file bytes
+                    file_bytes = b""
+                    remaining = filesize
+
+                    while remaining > 0:
+                        chunk = self.client_socket.recv(min(4096, remaining))
+                        if not chunk:
+                            break
+                        file_bytes += chunk
+                        remaining -= len(chunk)
+
+                    # Convert to text safely
+                    try:
+                        text = file_bytes.decode()
+                    except:
+                        text = file_bytes.decode("utf-8", errors="replace")
+
+                    # Open popup UI viewer
+                    self._show_file_viewer("Downloaded File", text)
+
+                    continue
+
+                print("[SERVER]:", data)
+
         except Exception as e:
-            print("Server connection closed:", e)
+            print("Receive error:", e)
+
+    def _display_file_buttons(self, files):
+        # Clear old file buttons
+        for widget in self.files_container.winfo_children():
+            widget.destroy()
+
+        # Create a button for each file
+        for filename in files:
+            btn = ctk.CTkButton(
+                self.files_container,
+                text=filename,
+                width=600,
+                fg_color="#1E3A5F",
+                hover_color="#00B0FF",
+                command=lambda f=filename: self.client_socket.sendall(f"GET_FILE:{f}".encode())
+            )
+            btn.pack(pady=5)
+
+    def _show_file_viewer(self, filename, content):
+        viewer = ctk.CTkToplevel(self)
+        viewer.title(f"Viewing: {filename}")
+        viewer.geometry("700x600")
+        viewer.configure(fg_color="#0A1A2B")
+
+        title = ctk.CTkLabel(
+            viewer,
+            text=filename,
+            font=ctk.CTkFont(size=22, weight="bold"),
+            text_color="#4FC3F7"
+        )
+        title.pack(pady=10)
+
+        # Scrollable textbox
+        textbox = ctk.CTkTextbox(
+            viewer,
+            width=650,
+            height=500,
+            corner_radius=10,
+            fg_color="#102437",
+            text_color="#E0F7FA",
+            font=ctk.CTkFont(size=14)
+        )
+        textbox.pack(pady=10, padx=10)
+
+        textbox.insert("0.0", content)
+        textbox.configure(state="disabled")  # Read-only
