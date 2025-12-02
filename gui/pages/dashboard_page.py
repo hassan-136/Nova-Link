@@ -23,7 +23,7 @@ class DashboardPage(ctk.CTkFrame):
 
     # ------------------ UI BUILD ------------------ #
     def _build_dashboard_card(self):
-        # Central Card Frame
+        # ---------------- Left: Central Card ---------------- #
         card = ctk.CTkFrame(
             self,
             width=700,
@@ -32,7 +32,7 @@ class DashboardPage(ctk.CTkFrame):
             fg_color="transparent"
         )
         card.place(relx=0.0, rely=0.5, x=20, y=40, anchor="w")  # 20 pixels from left
-        card.pack_propagate(False)  # prevents shrinking to fit children
+        card.pack_propagate(False)
 
         # Header
         header = ctk.CTkLabel(
@@ -43,32 +43,12 @@ class DashboardPage(ctk.CTkFrame):
         )
         header.pack(pady=(30, 20))
 
-        # Status Frame
-        status_frame = ctk.CTkFrame(
-            card,
-            corner_radius=20,
-            fg_color="transparent"
-        )
-        status_frame.pack(padx=30, pady=10, fill="x")
-
-        self.status_circle = ctk.CTkLabel(
-            status_frame, text="●", font=ctk.CTkFont(size=24),
-            text_color="#F44336"
-        )
-        self.status_circle.pack(side="left", padx=(10, 15), pady=15)
-
-        self.status_label = ctk.CTkLabel(
-            status_frame, text="DISCONNECTED", font=ctk.CTkFont(size=20, weight="bold"),
-            text_color="#F44336"
-        )
-        self.status_label.pack(side="left")
-
         # Server Selection
         server_label = ctk.CTkLabel(
             card, text="Select Server:", font=ctk.CTkFont(size=16),
             text_color="#B0BEC5"
         )
-        server_label.pack(anchor="w", padx=40, pady=(25, 5))
+        server_label.pack(anchor="w", padx=40, pady=(25, 25))
 
         self.server_optionmenu = ctk.CTkOptionMenu(
             card, values=SERVERS, variable=self.current_server,
@@ -102,6 +82,42 @@ class DashboardPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=14), text_color="#78909C"
         )
         footer.pack(pady=(0, 20))
+
+        # ---------------- Right: Status / Info Section ---------------- #
+        status_section = ctk.CTkFrame(
+            self,
+            width=250,
+            height=800,
+            corner_radius=30,
+            fg_color="transparent"
+        )
+        status_section.place(relx=0.0, rely=0.5, x=740, y=40, anchor="w")  # position right of card
+        status_section.pack_propagate(False)
+
+        # Status Container (horizontal)
+        status_container = ctk.CTkFrame(
+            status_section,
+            fg_color="transparent"
+        )
+        status_container.pack(pady=(50, 20))
+
+        # Status Circle
+        self.status_circle = ctk.CTkLabel(
+            status_container,
+            text="●",
+            font=ctk.CTkFont(size=36),
+            text_color="#F44336"
+        )
+        self.status_circle.pack(side="left", padx=(0, 15))
+
+        # Status Label
+        self.status_label = ctk.CTkLabel(
+            status_container,
+            text="DISCONNECTED",
+            font=ctk.CTkFont(size=22, weight="bold"),
+            text_color="#F44336"
+        )
+        self.status_label.pack(side="left")
 
     # ------------------ CONNECTION BINDINGS ------------------ #
     def _setup_connection_bindings(self):
