@@ -86,7 +86,7 @@ class DashboardPage(ctk.CTkFrame):
         # ---------------- Right: Status / Info Section ---------------- #
         status_section = ctk.CTkFrame(
             self,
-            width=250,
+            width=650,
             height=800,
             corner_radius=30,
             fg_color="transparent"
@@ -119,6 +119,28 @@ class DashboardPage(ctk.CTkFrame):
         )
         self.status_label.pack(side="left")
 
+        # Accessible Files Label
+        self.files_label = ctk.CTkLabel(
+            status_section,
+            text="Accessible Files:",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#B0BEC5"
+        )
+        self.files_label.pack(anchor="w", padx=10, pady=(30, 5))
+
+        # Container for files
+        self.files_container = ctk.CTkFrame(
+            status_section,
+            width=800,
+            corner_radius=10,
+            fg_color="transparent"
+        )
+        self.files_container.pack(padx=10, pady=(0, 20), fill="both", expand=True)
+
+        # Hide files section initially
+        self.files_label.pack_forget()
+        self.files_container.pack_forget()
+
     # ------------------ CONNECTION BINDINGS ------------------ #
     def _setup_connection_bindings(self):
         self.is_connected.trace_add("write", self._update_ui_on_status_change)
@@ -131,6 +153,11 @@ class DashboardPage(ctk.CTkFrame):
                 text="DISCONNECT", fg_color="#F44336", hover_color="#D32F2F"
             )
             self.server_optionmenu.configure(state="disabled")
+
+            # Show files section
+            self.files_label.pack(anchor="w", padx=10, pady=(30, 5))
+            self.files_container.pack(padx=10, pady=(0, 20), fill="both", expand=True)
+
         else:
             self.status_label.configure(text="DISCONNECTED", text_color="#F44336")
             self.status_circle.configure(text="●", text_color="#F44336")
@@ -138,6 +165,12 @@ class DashboardPage(ctk.CTkFrame):
                 text="CONNECT", fg_color="#00C4FF", hover_color="#00B0E5"
             )
             self.server_optionmenu.configure(state="normal")
+
+            # Clear and hide files section
+            for widget in self.files_container.winfo_children():
+                widget.destroy()  # remove all file boxes
+            self.files_label.pack_forget()
+            self.files_container.pack_forget()
 
     # ------------------ CONNECT/DISCONNECT ------------------ #
     def _toggle_connection(self):
@@ -201,6 +234,28 @@ class DashboardPage(ctk.CTkFrame):
                 data = self.client_socket.recv(1024)
                 if not data:
                     break
-                print(f"[SERVER] {data.decode()}")
+                message = data.decode()
+                print(f"[SERVER] {message}")
+
+                if "---Contents of" in message or "alpha1.txt" in message:
+                    # Create a new frame for each file
+                    file_box = ctk.CTkFrame(
+                        self.files_container,
+                        corner_radius=10,
+                        fg_color="#1E3A5F",
+                        border_width=1,
+                        border_color="#00C4FF"
+                    )
+                    file_box.pack(pady=10, padx=5, fill="x")
+
+                    # File content inside the frame
+                    file_label = ctk.CTkLabel(
+                        file_box,
+                        text=message.strip(),
+                        text_color="#E0F7FA",
+                        wraplength=750,  # wrap text to avoid horizontal overflow
+                        justify="left"
+                    )
+                    file_label.pack(padx=10, pady=10)
         except Exception as e:
             print("Server connection closed:", e)

@@ -1,5 +1,6 @@
 import socket
 import threading
+import os
 
 HOST = '127.0.0.1'  # localhost
 PORT = 5555         # port for Alpha-01
@@ -9,6 +10,16 @@ clients = []
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
     conn.sendall("Welcome to Alpha-01 VPN server!".encode())
+
+    # Send alpha1.txt contents to client
+    file_path = os.path.join(os.path.dirname(__file__), "alpha1.txt")
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            file_data = f.read()
+        conn.sendall(f"\n---Contents of alpha1.txt---\n{file_data}\n".encode())
+    else:
+        conn.sendall("alpha1.txt not found on server.".encode())
+
     try:
         while True:
             data = conn.recv(1024)
