@@ -2,23 +2,17 @@ import customtkinter as ctk
 from tkinter import messagebox
 import socket
 import threading
+import time
 from servers import SERVERS, SERVER_DETAILS
 
 class DashboardPage(ctk.CTkFrame):
-    """Modern VPN Dashboard with premium design and interactive UI."""
-
     def __init__(self, parent, controller):
-        super().__init__(parent, fg_color="transparent")
+        super().__init__(parent, fg_color="#0A1A2B")  # Dark background
         self.controller = controller
 
         # Connection State
         self.is_connected = ctk.BooleanVar(value=False)
-        self.current_server = ctk.StringVar(value="")
-
-        # Servers
-        self.available_servers = SERVERS
-        if self.available_servers:
-            self.current_server.set(self.available_servers[0])
+        self.current_server = ctk.StringVar(value=SERVERS[0] if SERVERS else "")
 
         # Grid Config
         self.grid_rowconfigure(0, weight=1)
@@ -27,65 +21,89 @@ class DashboardPage(ctk.CTkFrame):
         self._build_dashboard_card()
         self._setup_connection_bindings()
 
+    # ------------------ UI BUILD ------------------ #
     def _build_dashboard_card(self):
+        # Central Card Frame
         card = ctk.CTkFrame(
             self,
-            corner_radius=25,
-            fg_color="#0F1C2C",
-            border_width=2,
-            border_color="#00C4FF"
+            width=700,
+            height=800,
+            corner_radius=30,
+            fg_color="transparent"
         )
-        card.grid(row=0, column=0, padx=60, pady=60, sticky="nsew")
-        card.grid_columnconfigure(0, weight=1)
+        card.place(relx=0.0, rely=0.5, x=20, y=40, anchor="w")  # 20 pixels from left
+        card.pack_propagate(False)  # prevents shrinking to fit children
 
+        # Header
         header = ctk.CTkLabel(
             card,
-            text="Nova Link VPN",
-            font=ctk.CTkFont(size=28, weight="bold"),
+            text="🌐 Nova Link VPN",
+            font=ctk.CTkFont(size=32, weight="bold"),
             text_color="#4FC3F7"
         )
-        header.grid(row=0, column=0, pady=(30, 10))
+        header.pack(pady=(30, 20))
 
-        # Status Card
+        # Status Frame
         status_frame = ctk.CTkFrame(
-            card, corner_radius=20, fg_color="#1E3A5F",
-            border_width=1, border_color="#4FC3F7"
+            card,
+            corner_radius=20,
+            fg_color="transparent"
         )
-        status_frame.grid(row=1, column=0, padx=40, pady=20, sticky="ew")
-        status_frame.grid_columnconfigure(1, weight=1)
+        status_frame.pack(padx=30, pady=10, fill="x")
 
         self.status_circle = ctk.CTkLabel(
-            status_frame, text="●", font=ctk.CTkFont(size=22), text_color="#F44336"
-        )
-        self.status_circle.grid(row=0, column=0, padx=(10, 20), pady=10)
-
-        self.status_label = ctk.CTkLabel(
-            status_frame, text="DISCONNECTED", font=ctk.CTkFont(size=18, weight="bold"),
+            status_frame, text="●", font=ctk.CTkFont(size=24),
             text_color="#F44336"
         )
-        self.status_label.grid(row=0, column=1, sticky="w")
+        self.status_circle.pack(side="left", padx=(10, 15), pady=15)
+
+        self.status_label = ctk.CTkLabel(
+            status_frame, text="DISCONNECTED", font=ctk.CTkFont(size=20, weight="bold"),
+            text_color="#F44336"
+        )
+        self.status_label.pack(side="left")
 
         # Server Selection
-        server_label = ctk.CTkLabel(card, text="Choose Server:", text_color="#B0BEC5")
-        server_label.grid(row=2, column=0, padx=40, sticky="w")
+        server_label = ctk.CTkLabel(
+            card, text="Select Server:", font=ctk.CTkFont(size=16),
+            text_color="#B0BEC5"
+        )
+        server_label.pack(anchor="w", padx=40, pady=(25, 5))
 
         self.server_optionmenu = ctk.CTkOptionMenu(
-            card, values=self.available_servers, variable=self.current_server,
-            width=350, height=45, corner_radius=12, fg_color="#1E3A5F",
-            button_color="#00C4FF", button_hover_color="#00B0E5",
-            dropdown_fg_color="#1E3A5F"
+            card, values=SERVERS, variable=self.current_server,
+            width=600, height=50, corner_radius=15,
+            fg_color="#1E3A5F", button_color="#00C4FF", button_hover_color="#00B0E5",
+            dropdown_fg_color="#1E3A5F", dropdown_text_color="#E0F7FA"
         )
-        self.server_optionmenu.grid(row=3, column=0, padx=40, pady=15, sticky="ew")
+        self.server_optionmenu.pack(padx=40, pady=(0, 25))
 
         # Connect Button
         self.connect_button = ctk.CTkButton(
-            card, text="CONNECT", width=350, height=60, corner_radius=30,
+            card, text="CONNECT", width=600, height=60, corner_radius=30,
             fg_color="#00C4FF", hover_color="#00B0E5",
-            font=ctk.CTkFont(size=20, weight="bold"),
+            font=ctk.CTkFont(size=22, weight="bold"),
             command=self._toggle_connection
         )
-        self.connect_button.grid(row=4, column=0, pady=(15, 25), padx=40, sticky="ew")
+        self.connect_button.pack(pady=(10, 20))
 
+        # Logout Button
+        self.logout_button = ctk.CTkButton(
+            card, text="LOGOUT", width=600, height=60, corner_radius=30,
+            fg_color="#F44336", hover_color="#D32F2F",
+            font=ctk.CTkFont(size=22, weight="bold"),
+            command=lambda: print("Logout clicked!")  # placeholder
+        )
+        self.logout_button.pack(pady=(0, 20))  # space before footer
+
+        # Footer Note
+        footer = ctk.CTkLabel(
+            card, text="Secure & Private VPN Connection",
+            font=ctk.CTkFont(size=14), text_color="#78909C"
+        )
+        footer.pack(pady=(0, 20))
+
+    # ------------------ CONNECTION BINDINGS ------------------ #
     def _setup_connection_bindings(self):
         self.is_connected.trace_add("write", self._update_ui_on_status_change)
 
@@ -93,16 +111,19 @@ class DashboardPage(ctk.CTkFrame):
         if self.is_connected.get():
             self.status_label.configure(text="CONNECTED", text_color="#4CAF50")
             self.status_circle.configure(text="●", text_color="#4CAF50")
-            self.connect_button.configure(text="DISCONNECT", fg_color="#F44336", hover_color="#D32F2F")
+            self.connect_button.configure(
+                text="DISCONNECT", fg_color="#F44336", hover_color="#D32F2F"
+            )
             self.server_optionmenu.configure(state="disabled")
-            messagebox.showinfo("VPN Status", f"Connected to {self.current_server.get()}!")
         else:
             self.status_label.configure(text="DISCONNECTED", text_color="#F44336")
             self.status_circle.configure(text="●", text_color="#F44336")
-            self.connect_button.configure(text="CONNECT", fg_color="#00C4FF", hover_color="#00B0E5")
+            self.connect_button.configure(
+                text="CONNECT", fg_color="#00C4FF", hover_color="#00B0E5"
+            )
             self.server_optionmenu.configure(state="normal")
-            messagebox.showinfo("VPN Status", "Disconnected from VPN.")
 
+    # ------------------ CONNECT/DISCONNECT ------------------ #
     def _toggle_connection(self):
         if self.is_connected.get():
             # Disconnect
@@ -110,23 +131,54 @@ class DashboardPage(ctk.CTkFrame):
                 self.client_socket.close()
             self.is_connected.set(False)
         else:
-            # Connect
-            from servers import SERVER_DETAILS
-            server_info = SERVER_DETAILS.get(self.current_server.get())
-            if not server_info:
-                messagebox.showerror("Connection Error", "Server info not found.")
-                return
+            # Disable UI during connection
+            self.connect_button.configure(state="disabled")
+            self.server_optionmenu.configure(state="disabled")
+            self.status_label.configure(text="CONNECTING...", text_color="#FFC107")
+            self.status_circle.configure(text="●", text_color="#FFC107")
 
-            host = server_info["host"]
-            port = server_info["port"]
-            try:
-                self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.client_socket.connect((host, port))
-                threading.Thread(target=self._receive_server_messages, daemon=True).start()
-                self.is_connected.set(True)
-            except Exception as e:
-                messagebox.showerror("Connection Failed", f"Could not connect: {e}")
+            def connect_thread():
+                start_time = time.time()
+                # Animated pulsing circle
+                for i in range(6):  # ~3 seconds
+                    color = "#FFC107" if i % 2 == 0 else "#FFEB3B"
+                    self.status_circle.configure(text="●", text_color=color)
+                    time.sleep(0.5)
 
+                # Try actual connection
+                server_info = SERVER_DETAILS.get(self.current_server.get())
+                if not server_info:
+                    self.connect_button.configure(state="normal")
+                    self.server_optionmenu.configure(state="normal")
+                    self.status_label.configure(text="DISCONNECTED", text_color="#F44336")
+                    self.status_circle.configure(text="●", text_color="#F44336")
+                    return
+
+                host, port = server_info["host"], server_info["port"]
+                try:
+                    self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.client_socket.connect((host, port))
+                    threading.Thread(target=self._receive_server_messages, daemon=True).start()
+
+                    # Ensure at least 3 seconds
+                    elapsed = time.time() - start_time
+                    if elapsed < 3:
+                        time.sleep(3 - elapsed)
+
+                    # Connected
+                    self.is_connected.set(True)
+                except Exception as e:
+                    messagebox.showerror("Connection Error", f"Failed to connect:\n{e}")
+                    self.status_label.configure(text="DISCONNECTED", text_color="#F44336")
+                    self.status_circle.configure(text="●", text_color="#F44336")
+                finally:
+                    self.connect_button.configure(state="normal")
+                    if not self.is_connected.get():
+                        self.server_optionmenu.configure(state="normal")
+
+            threading.Thread(target=connect_thread, daemon=True).start()
+
+    # ------------------ RECEIVE SERVER ------------------ #
     def _receive_server_messages(self):
         try:
             while True:

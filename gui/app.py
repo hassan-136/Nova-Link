@@ -16,15 +16,16 @@ class SecureVPNApp(ctk.CTk):
 
         # ---------- Premium Window Config ----------
         self.title("Nova Link – Secure VPN Client")
-        self.geometry("1400x900")
+        # self.geometry("1400x900")
         self.minsize(1200, 800)
+        self.state('zoomed')
 
         # Center on screen with elegant size
-        self.update_idletasks()
-        w, h = 1400, 900
-        x = (self.winfo_screenwidth() // 2) - (w // 2)
-        y = (self.winfo_screenheight() // 2) - (h // 2)
-        self.geometry(f"{w}x{h}+{x}+{y}")
+        # self.update_idletasks()
+        # w, h = 1400, 900
+        # x = (self.winfo_screenwidth() // 2) - (w // 2)
+        # y = (self.winfo_screenheight() // 2) - (h // 2)
+        # self.geometry(f"{w}x{h}+{x}+{y}")
 
         # Premium theme configuration
         ctk.set_appearance_mode("dark")
@@ -306,6 +307,16 @@ class SecureVPNApp(ctk.CTk):
         frame = self.pages.get(page_name)
         if frame:
             frame.tkraise()
+
+            if page_name == "DashboardPage":
+                self.brand_frame.grid_remove()  # hide left panel
+                self.grid_columnconfigure(0, weight=0)  # remove left weight
+                self.grid_columnconfigure(1, weight=1)  # make right column take full width
+            else:
+                self.brand_frame.grid()
+                self.grid_columnconfigure(0, weight=1)
+                self.grid_columnconfigure(1, weight=2)
+
         else:
             # Enhanced error message for missing pages
             messagebox.showerror("Navigation Error", f"Cannot find page: '{page_name}'. Please check registration.")
