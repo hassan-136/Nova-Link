@@ -22,5 +22,11 @@
         "email": "gAAAAABpLrBv1pRCTH-Hqv102Ne3RA0t1VQLPGmJGvlFPh2aTrKJus4lum1IrePlg0m38DDPq-Sp5KXBkdEVv3YDln3ZzmHMsg==",
         "hashed_password": "$2b$12$Yur46eHVHr7ywnMRmI7ASuIh9j.V/6ygSqXHg0BeshIP4OwTzkCru",
         "created_at": "2025-12-02T14:25:03.473315"
+    },
+    "arooj": {
+        "name": "gAAAAABpOQ9cOyC_jko2wJvXdYGGlS9TstsaQrzyg5vpyDTkHY_-2oq6PJF5Jo9SYuYAaQDZ5D-kDa8oPyOqv4RQNDDNeQPY5Q==",
+        "email": "gAAAAABpOQ9cOuyoNyBtXWaAtSlRb0rtQIyuIsD8EXRFjk59eZHsrM-ttY6ONvCAce_8mPDzRgUiq_5GNWKI6oftUTNOzqEyNw==",
+        "hashed_password": "$2b$12$jC/xdN0v46Uq10qjYxXU2ONOYpJK7E9QWwhfGZo9WeK9phF2WprdW",
+        "created_at": "2025-12-10T11:12:44.938936"
     }
 }

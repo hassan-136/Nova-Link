@@ -1,0 +1,157 @@
+2025-12-03 11:42:25,145 - src.utils - INFO - ==================================================
+2025-12-03 11:42:25,230 - src.utils - INFO - ==================================================
+2025-12-03 11:42:25,236 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-03 11:42:37,443 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.7.66.120:5000
+2025-12-03 11:42:37,444 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-12-03 11:42:37,449 - werkzeug - INFO -  * Restarting with stat
+2025-12-03 11:42:38,418 - src.utils - INFO - ==================================================
+2025-12-03 11:42:38,426 - src.utils - INFO - ==================================================
+2025-12-03 11:42:38,432 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-03 11:42:38,555 - werkzeug - WARNING -  * Debugger is active!
+2025-12-03 11:42:38,562 - werkzeug - INFO -  * Debugger PIN: 117-402-816
+2025-12-07 12:47:09,195 - src.utils - INFO - ==================================================
+2025-12-07 12:47:09,267 - src.utils - INFO - ==================================================
+2025-12-07 12:47:09,309 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 12:47:21,735 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.7.117.141:5000
+2025-12-07 12:47:21,736 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-12-07 12:47:21,740 - werkzeug - INFO -  * Restarting with stat
+2025-12-07 12:47:22,760 - src.utils - INFO - ==================================================
+2025-12-07 12:47:22,769 - src.utils - INFO - ==================================================
+2025-12-07 12:47:22,804 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 12:47:22,945 - werkzeug - WARNING -  * Debugger is active!
+2025-12-07 12:47:22,952 - werkzeug - INFO -  * Debugger PIN: 135-058-308
+2025-12-07 12:53:50,067 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Arooj Ghaffar\\PycharmProjects\\VPNVPN\\Nova-Link-Complete\\vpn-core\\src\\utils.py', reloading
+2025-12-07 12:53:50,218 - werkzeug - INFO -  * Restarting with stat
+2025-12-07 12:53:51,626 - src.utils - INFO - ==================================================
+2025-12-07 12:53:51,626 - src.utils - INFO - 🚀 Nova-Link VPN Server Starting...
+2025-12-07 12:53:51,627 - src.utils - INFO - ==================================================
+2025-12-07 12:53:51,636 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 12:53:51,638 - src.utils - INFO - 📂 Loading existing server keys...
+2025-12-07 12:53:51,640 - src.utils - INFO - ✅ VPN Server initialized successfully
+2025-12-07 13:14:11,811 - src.utils - INFO - ==================================================
+2025-12-07 13:14:11,812 - src.utils - INFO - 🚀 Nova-Link VPN Server Starting...
+2025-12-07 13:14:11,812 - src.utils - INFO - ==================================================
+2025-12-07 13:14:11,854 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 13:14:11,866 - src.utils - INFO - 📂 Loading existing server keys...
+2025-12-07 13:14:11,883 - src.utils - INFO - ✅ VPN Server initialized successfully
+2025-12-07 13:47:20,365 - src.utils - INFO - ==================================================
+2025-12-07 13:47:20,366 - src.utils - INFO - 🚀 Nova-Link VPN Server Starting...
+2025-12-07 13:47:20,366 - src.utils - INFO - ==================================================
+2025-12-07 13:47:20,373 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 13:47:20,374 - src.utils - INFO - 📂 Loading existing server keys...
+2025-12-07 13:47:20,376 - src.utils - INFO - ✅ VPN Server initialized successfully
+2025-12-07 13:47:20,388 - src.utils - INFO - ▶️ Starting VPN tunnel...
+2025-12-07 13:47:20,390 - src.tunnel_manager - INFO - ✅ VPN tunnel started successfully
+2025-12-07 13:47:20,390 - src.utils - INFO - ✅ VPN Server is running!
+2025-12-07 13:47:32,775 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.7.117.141:5000
+2025-12-07 13:47:32,775 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-12-07 13:47:32,783 - werkzeug - INFO -  * Restarting with stat
+2025-12-07 13:47:33,612 - src.utils - INFO - ==================================================
+2025-12-07 13:47:33,613 - src.utils - INFO - 🚀 Nova-Link VPN Server Starting...
+2025-12-07 13:47:33,613 - src.utils - INFO - ==================================================
+2025-12-07 13:47:33,628 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 13:47:33,629 - src.utils - INFO - 📂 Loading existing server keys...
+2025-12-07 13:47:33,631 - src.utils - INFO - ✅ VPN Server initialized successfully
+2025-12-07 13:47:33,649 - src.utils - INFO - ▶️ Starting VPN tunnel...
+2025-12-07 13:47:33,652 - src.tunnel_manager - INFO - ✅ VPN tunnel started successfully
+2025-12-07 13:47:33,653 - src.utils - INFO - ✅ VPN Server is running!
+2025-12-07 13:47:33,754 - werkzeug - WARNING -  * Debugger is active!
+2025-12-07 13:47:33,770 - werkzeug - INFO -  * Debugger PIN: 117-402-816
+2025-12-07 14:15:57,670 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 14:15:57] "GET /api/health HTTP/1.1" 200 -
+2025-12-07 14:15:59,719 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 14:15:59] "GET /api/server/info HTTP/1.1" 200 -
+2025-12-07 14:16:01,768 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 14:16:01] "GET /api/tunnel/status HTTP/1.1" 200 -
+2025-12-07 14:16:03,811 - src.utils - INFO - API: Registering client test_client_001
+2025-12-07 14:16:03,811 - src.utils - INFO - 📝 Registering client: test_client_001
+2025-12-07 14:16:03,823 - src.utils - INFO - ✅ Allocated IP: 10.8.0.2
+2025-12-07 14:16:03,972 - src.tunnel_manager - INFO - ✅ Added peer: test_client_001 (10.8.0.2/32)
+2025-12-07 14:16:03,973 - src.utils - INFO - ✅ Client test_client_001 registered successfully
+2025-12-07 14:16:03,974 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 14:16:03] "POST /api/client/register HTTP/1.1" 200 -
+2025-12-07 14:16:06,008 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 14:16:06] "GET /api/ip/list HTTP/1.1" 200 -
+2025-12-07 14:32:17,556 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Arooj Ghaffar\\PycharmProjects\\VPNVPN\\Nova-Link-Complete\\vpn-core\\integration_test.py', reloading
+2025-12-07 14:32:17,722 - werkzeug - INFO -  * Restarting with stat
+2025-12-07 14:32:18,340 - src.utils - INFO - ==================================================
+2025-12-07 14:32:18,340 - src.utils - INFO - 🚀 Nova-Link VPN Server Starting...
+2025-12-07 14:32:18,340 - src.utils - INFO - ==================================================
+2025-12-07 14:32:18,341 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 14:32:18,342 - src.utils - INFO - 📂 Loading existing server keys...
+2025-12-07 14:32:18,342 - src.utils - INFO - ✅ VPN Server initialized successfully
+2025-12-07 14:32:18,349 - src.utils - INFO - ▶️ Starting VPN tunnel...
+2025-12-07 14:32:18,350 - src.tunnel_manager - INFO - ✅ VPN tunnel started successfully
+2025-12-07 14:32:18,351 - src.utils - INFO - ✅ VPN Server is running!
+2025-12-07 14:32:18,419 - werkzeug - WARNING -  * Debugger is active!
+2025-12-07 14:32:18,424 - werkzeug - INFO -  * Debugger PIN: 117-402-816
+2025-12-07 15:30:28,018 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:28] "GET /api/health HTTP/1.1" 200 -
+2025-12-07 15:30:31,086 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:31] "GET /api/server/info HTTP/1.1" 200 -
+2025-12-07 15:30:34,162 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:34] "GET /api/tunnel/status HTTP/1.1" 200 -
+2025-12-07 15:30:37,215 - src.utils - INFO - API: Registering client integration_test_1
+2025-12-07 15:30:37,216 - src.utils - INFO - 📝 Registering client: integration_test_1
+2025-12-07 15:30:37,243 - src.utils - INFO - ✅ Allocated IP: 10.8.0.3
+2025-12-07 15:30:37,479 - src.tunnel_manager - INFO - ✅ Added peer: integration_test_1 (10.8.0.3/32)
+2025-12-07 15:30:37,480 - src.utils - INFO - ✅ Client integration_test_1 registered successfully
+2025-12-07 15:30:37,481 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:37] "POST /api/client/register HTTP/1.1" 200 -
+2025-12-07 15:30:39,509 - src.utils - INFO - API: Registering client integration_test_2
+2025-12-07 15:30:39,510 - src.utils - INFO - 📝 Registering client: integration_test_2
+2025-12-07 15:30:39,522 - src.utils - INFO - ✅ Allocated IP: 10.8.0.4
+2025-12-07 15:30:39,530 - src.tunnel_manager - INFO - ✅ Added peer: integration_test_2 (10.8.0.4/32)
+2025-12-07 15:30:39,530 - src.utils - INFO - ✅ Client integration_test_2 registered successfully
+2025-12-07 15:30:39,532 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:39] "POST /api/client/register HTTP/1.1" 200 -
+2025-12-07 15:30:42,573 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:42] "GET /api/ip/stats HTTP/1.1" 200 -
+2025-12-07 15:30:44,618 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:44] "GET /api/ip/list HTTP/1.1" 200 -
+2025-12-07 15:30:47,654 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:47] "GET /api/peer/list HTTP/1.1" 200 -
+2025-12-07 15:30:50,689 - src.utils - INFO - API: Stopping tunnel...
+2025-12-07 15:30:50,690 - src.utils - INFO - ⏹️ Stopping VPN tunnel...
+2025-12-07 15:30:50,692 - src.tunnel_manager - INFO - ✅ VPN tunnel stopped successfully
+2025-12-07 15:30:50,693 - src.utils - INFO - ✅ VPN Server stopped
+2025-12-07 15:30:50,694 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:50] "POST /api/tunnel/stop HTTP/1.1" 200 -
+2025-12-07 15:30:53,737 - src.utils - INFO - API: Starting tunnel...
+2025-12-07 15:30:53,738 - src.utils - INFO - ▶️ Starting VPN tunnel...
+2025-12-07 15:30:53,741 - src.tunnel_manager - INFO - ✅ VPN tunnel started successfully
+2025-12-07 15:30:53,741 - src.utils - INFO - ✅ VPN Server is running!
+2025-12-07 15:30:53,742 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:53] "POST /api/tunnel/start HTTP/1.1" 200 -
+2025-12-07 15:30:56,773 - src.utils - INFO - API: Unregistering client integration_test_1
+2025-12-07 15:30:56,775 - src.utils - INFO - 🗑️ Unregistering client: integration_test_1
+2025-12-07 15:30:56,778 - src.tunnel_manager - INFO - ✅ Removed peer: integration_test_1
+2025-12-07 15:30:56,791 - src.utils - INFO - ✅ Client integration_test_1 unregistered successfully
+2025-12-07 15:30:56,792 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:56] "POST /api/client/unregister HTTP/1.1" 200 -
+2025-12-07 15:30:58,833 - src.utils - INFO - API: Unregistering client integration_test_2
+2025-12-07 15:30:58,833 - src.utils - INFO - 🗑️ Unregistering client: integration_test_2
+2025-12-07 15:30:58,836 - src.tunnel_manager - INFO - ✅ Removed peer: integration_test_2
+2025-12-07 15:30:58,856 - src.utils - INFO - ✅ Client integration_test_2 unregistered successfully
+2025-12-07 15:30:58,858 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:30:58] "POST /api/client/unregister HTTP/1.1" 200 -
+2025-12-07 15:38:37,188 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:38:37] "[33mGET /api HTTP/1.1[0m" 404 -
+2025-12-07 15:38:37,516 - werkzeug - INFO - 127.0.0.1 - - [07/Dec/2025 15:38:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-12-07 15:46:16,415 - src.utils - INFO - ==================================================
+2025-12-07 15:46:16,416 - src.utils - INFO - 🚀 Nova-Link VPN Server Starting...
+2025-12-07 15:46:16,416 - src.utils - INFO - ==================================================
+2025-12-07 15:46:16,419 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 15:46:16,420 - src.utils - INFO - 📂 Loading existing server keys...
+2025-12-07 15:46:16,422 - src.utils - INFO - ✅ VPN Server initialized successfully
+2025-12-07 15:46:16,436 - src.utils - INFO - ▶️ Starting VPN tunnel...
+2025-12-07 15:46:16,437 - src.tunnel_manager - INFO - ✅ VPN tunnel started successfully
+2025-12-07 15:46:16,438 - src.utils - INFO - ✅ VPN Server is running!
+2025-12-07 15:46:28,503 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.7.117.141:5000
+2025-12-07 15:46:28,503 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-12-07 15:46:28,507 - werkzeug - INFO -  * Restarting with stat
+2025-12-07 15:46:29,373 - src.utils - INFO - ==================================================
+2025-12-07 15:46:29,374 - src.utils - INFO - 🚀 Nova-Link VPN Server Starting...
+2025-12-07 15:46:29,374 - src.utils - INFO - ==================================================
+2025-12-07 15:46:29,377 - src.tunnel_manager - INFO - TunnelManager initialized
+2025-12-07 15:46:29,377 - src.utils - INFO - 📂 Loading existing server keys...
+2025-12-07 15:46:29,378 - src.utils - INFO - ✅ VPN Server initialized successfully
+2025-12-07 15:46:29,392 - src.utils - INFO - ▶️ Starting VPN tunnel...
+2025-12-07 15:46:29,393 - src.tunnel_manager - INFO - ✅ VPN tunnel started successfully
+2025-12-07 15:46:29,393 - src.utils - INFO - ✅ VPN Server is running!
+2025-12-07 15:46:29,500 - werkzeug - WARNING -  * Debugger is active!
+2025-12-07 15:46:29,507 - werkzeug - INFO -  * Debugger PIN: 117-402-816
