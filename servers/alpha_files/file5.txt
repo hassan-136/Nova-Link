@@ -1,0 +1,6 @@
+VPN Connection Info:
+Server: alpha1
+Port: 5555
+VPN Name: Nova-LINK
+Protocol: UDP
+Reconnect: Automatic

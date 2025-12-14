@@ -1,0 +1,6 @@
+# Alpha1 VPN Details
+VPN: Nova-LINK
+Server: alpha1
+Port: 5555
+Authentication: Username/Password
+Status: Ready to Connect
