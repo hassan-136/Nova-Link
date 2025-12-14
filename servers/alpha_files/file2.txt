@@ -1,0 +1,7 @@
+
+# VPN Setup Info
+VPN Name: Nova-LINK
+Server: alpha1
+Port: 5555
+Connection Type: Secure
+Auto-Connect: Yes

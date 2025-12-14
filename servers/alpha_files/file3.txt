@@ -1,0 +1,6 @@
+VPN Configuration:
+- Server Name: alpha1
+- VPN Name: Nova-LINK
+- Port: 5555
+- DNS Leak Protection: Enabled
+- Kill Switch: On

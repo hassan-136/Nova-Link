@@ -1,0 +1,6 @@
+# VPN Connection Details
+Server Name: alpha1
+Port: 5555
+VPN Name: Nova-LINK
+Protocol: TCP
+Encryption: AES-256
