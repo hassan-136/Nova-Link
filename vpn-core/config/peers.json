@@ -1,0 +1,14 @@
+{
+  "active_peers": [
+    {
+      "client_id": "test_client_001",
+      "public_key": "gt/CrXJlvJAmR5P3H5EedIm4Ujvm4LYJ8ceg2GAlSng=",
+      "allowed_ip": "10.8.0.2/32",
+      "added_at": "2025-12-07T14:16:03.971002",
+      "status": "active"
+    }
+  ],
+  "tunnel_status": "active",
+  "started_at": "2025-12-07T15:46:29.392477",
+  "stopped_at": "2025-12-07T15:30:50.690971"
+}

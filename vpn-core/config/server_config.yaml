@@ -1,0 +1,33 @@
+# Nova-Link VPN Server Configuration
+
+server:
+  name: "Nova-Link VPN Server"
+  version: "1.0.0"
+
+network:
+  interface: "wg0"
+  subnet: "10.8.0.0/24"
+  server_ip: "10.8.0.1"
+  listen_port: 51820
+
+ip_pool:
+  start_ip: 2
+  end_ip: 254
+
+dns:
+  primary: "8.8.8.8"
+  secondary: "8.8.4.4"
+
+security:
+  encryption: "ChaCha20-Poly1305"
+  key_exchange: "Curve25519"
+  persistent_keepalive: 25
+
+logging:
+  level: "INFO"
+  file: "../logs/vpn_server.log"
+
+api:
+  host: "0.0.0.0"
+  port: 5000
+  cors_enabled: true

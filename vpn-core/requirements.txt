@@ -1,0 +1,27 @@
+# Web Framework
+flask==3.0.0
+flask-cors==4.0.0
+
+# Cryptography for VPN encryption
+cryptography==41.0.7
+pycryptodome==3.19.0
+
+# Networking
+python-wireguard==0.2.2
+
+scapy==2.5.0
+
+# Configuration
+pyyaml==6.0.1
+python-dotenv==1.0.0
+
+# Database (for IP tracking)
+tinydb==4.8.0
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# Utilities
+requests==2.31.0
+colorama==0.4.6
