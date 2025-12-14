@@ -3,16 +3,26 @@ from tkinter import messagebox
 import socket
 import threading
 import time
-import tempfile
-import subprocess
 import sys
-import os
-from servers import SERVERS, SERVER_DETAILS
+
+# Configure appearance
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("blue")
+
+SERVERS = [
+    "Alpha1 (Low Latency)"
+]
+
+SERVER_DETAILS = {
+    "Alpha1 (Low Latency)": {"host": "10.159.187.143", "port": 5555}
+}
 
 class DashboardPage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent, fg_color="#0A1A2B")  # Dark background
         self.controller = controller
+        self.client_socket = None
+        self.stop_threads = False
 
         # Connection State
         self.is_connected = ctk.BooleanVar(value=False)
@@ -35,7 +45,7 @@ class DashboardPage(ctk.CTkFrame):
             corner_radius=30,
             fg_color="transparent"
         )
-        card.place(relx=0.0, rely=0.5, x=20, y=40, anchor="w")  # 20 pixels from left
+        card.place(relx=0.0, rely=0.5, x=20, y=40, anchor="w")
         card.pack_propagate(False)
 
         # Header
@@ -76,9 +86,9 @@ class DashboardPage(ctk.CTkFrame):
             card, text="LOGOUT", width=600, height=60, corner_radius=30,
             fg_color="#F44336", hover_color="#D32F2F",
             font=ctk.CTkFont(size=22, weight="bold"),
-            command=lambda: print("Logout clicked!")  # placeholder
+            command=lambda: print("Logout clicked!")
         )
-        self.logout_button.pack(pady=(0, 20))  # space before footer
+        self.logout_button.pack(pady=(0, 20))
 
         # Footer Note
         footer = ctk.CTkLabel(
@@ -95,7 +105,7 @@ class DashboardPage(ctk.CTkFrame):
             corner_radius=30,
             fg_color="transparent"
         )
-        status_section.place(relx=0.0, rely=0.5, x=740, y=40, anchor="w")  # position right of card
+        status_section.place(relx=0.0, rely=0.5, x=740, y=40, anchor="w")
         status_section.pack_propagate(False)
 
         # Status Container (horizontal)
@@ -130,20 +140,17 @@ class DashboardPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=16, weight="bold"),
             text_color="#B0BEC5"
         )
-        self.files_label.pack(anchor="w", padx=10, pady=(30, 5))
+        # Hidden by default
 
         # Container for files
-        self.files_container = ctk.CTkFrame(
+        self.files_container = ctk.CTkScrollableFrame(
             status_section,
-            width=800,
+            width=600,
+            height=400,
             corner_radius=10,
             fg_color="transparent"
         )
-        self.files_container.pack(padx=10, pady=(0, 20), fill="both", expand=True)
-
-        # Hide files section initially
-        self.files_label.pack_forget()
-        self.files_container.pack_forget()
+        # Hidden by default
 
     # ------------------ CONNECTION BINDINGS ------------------ #
     def _setup_connection_bindings(self):
@@ -154,129 +161,136 @@ class DashboardPage(ctk.CTkFrame):
             self.status_label.configure(text="CONNECTED", text_color="#4CAF50")
             self.status_circle.configure(text="●", text_color="#4CAF50")
             self.connect_button.configure(
-                text="DISCONNECT", fg_color="#F44336", hover_color="#D32F2F"
+                text="DISCONNECT", fg_color="#F44336", hover_color="#D32F2F", state="normal"
             )
             self.server_optionmenu.configure(state="disabled")
 
             # Show files section
             self.files_label.pack(anchor="w", padx=10, pady=(30, 5))
             self.files_container.pack(padx=10, pady=(0, 20), fill="both", expand=True)
-
         else:
             self.status_label.configure(text="DISCONNECTED", text_color="#F44336")
             self.status_circle.configure(text="●", text_color="#F44336")
             self.connect_button.configure(
-                text="CONNECT", fg_color="#00C4FF", hover_color="#00B0E5"
+                text="CONNECT", fg_color="#00C4FF", hover_color="#00B0E5", state="normal"
             )
             self.server_optionmenu.configure(state="normal")
 
             # Clear and hide files section
             for widget in self.files_container.winfo_children():
-                widget.destroy()  # remove all file boxes
+                widget.destroy()
             self.files_label.pack_forget()
             self.files_container.pack_forget()
 
     # ------------------ CONNECT/DISCONNECT ------------------ #
     def _toggle_connection(self):
         if self.is_connected.get():
-            # Disconnect
-            if hasattr(self, "client_socket"):
-                self.client_socket.close()
+            # Disconnect Logic
+            self.stop_threads = True
+            if self.client_socket:
+                try:
+                    self.client_socket.close()
+                except:
+                    pass
             self.is_connected.set(False)
         else:
-            # Disable UI during connection
-            self.connect_button.configure(state="disabled")
-            self.server_optionmenu.configure(state="disabled")
-            self.status_label.configure(text="CONNECTING...", text_color="#FFC107")
-            self.status_circle.configure(text="●", text_color="#FFC107")
+            # Connect Logic
+            self.stop_threads = False
+            threading.Thread(target=self._connect_process, daemon=True).start()
 
-            def connect_thread():
-                start_time = time.time()
-                # Animated pulsing circle
-                for i in range(6):  # ~3 seconds
-                    color = "#FFC107" if i % 2 == 0 else "#FFEB3B"
-                    self.status_circle.configure(text="●", text_color=color)
-                    time.sleep(0.5)
+    def _connect_process(self):
+        """Runs in a background thread to handle the connection attempt."""
+        # 1. Animation
+        for i in range(6):  # ~3 seconds pulsing
+            if self.stop_threads: return
+            color = "#FFC107" if i % 2 == 0 else "#FFEB3B"
+            self.status_circle.configure(text="●", text_color=color)
+            time.sleep(0.5)
 
-                # Try actual connection
-                server_info = SERVER_DETAILS.get(self.current_server.get())
-                if not server_info:
-                    self.connect_button.configure(state="normal")
-                    self.server_optionmenu.configure(state="normal")
-                    self.status_label.configure(text="DISCONNECTED", text_color="#F44336")
-                    self.status_circle.configure(text="●", text_color="#F44336")
-                    return
+        # 2. Update UI to 'Connecting'
+        self.connect_button.configure(state="disabled", text="Connecting...")
+        
+        # 3. Try Socket Connection
+        try:
+            target = SERVER_DETAILS[self.current_server.get()]
+            
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.client_socket.settimeout(5) # 5 second timeout
+            self.client_socket.connect((target["host"], target["port"]))
+            self.client_socket.settimeout(None) # Remove timeout for blocking recv
 
-                host, port = server_info["host"], server_info["port"]
-                try:
-                    self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.client_socket.connect((host, port))
-                    threading.Thread(target=self._receive_server_messages, daemon=True).start()
+            # If successful:
+            self.is_connected.set(True)
+            
+            # Start the listener thread for files/messages
+            threading.Thread(target=self._receive_server_messages, daemon=True).start()
 
-                    # Ensure at least 3 seconds
-                    elapsed = time.time() - start_time
-                    if elapsed < 3:
-                        time.sleep(3 - elapsed)
-
-                    # Connected
-                    self.is_connected.set(True)
-                except Exception as e:
-                    messagebox.showerror("Connection Error", f"Failed to connect:\n{e}")
-                    self.status_label.configure(text="DISCONNECTED", text_color="#F44336")
-                    self.status_circle.configure(text="●", text_color="#F44336")
-                finally:
-                    self.connect_button.configure(state="normal")
-                    if not self.is_connected.get():
-                        self.server_optionmenu.configure(state="normal")
-
-            threading.Thread(target=connect_thread, daemon=True).start()
+        except Exception as e:
+            # Connection failed
+            self.is_connected.set(False)
+            messagebox.showerror(
+                "Connection Failed",
+                f"Could not connect to {target['host']}:{target['port']}\n\nError: {e}"
+            )
+        finally:
+            self.connect_button.configure(state="normal")
 
     def _receive_server_messages(self):
+        """Runs in background to listen for FILE_LIST or downloads."""
         try:
-            while True:
+            while not self.stop_threads:
+                # Basic receive
                 data = self.client_socket.recv(1024).decode(errors="ignore")
                 if not data:
                     break
 
-                # --------------------- FILE LIST HANDLING --------------------- #
-                if data.startswith("FILE_LIST"):
-                    files = data.replace("FILE_LIST", "").strip().split("\n")
-                    self._display_file_buttons(files)
+                # --- PROTOCOL: FILE LIST ---
+                if "FILE_LIST" in data:
+                    # Example format: "FILE_LIST file1.txt\nfile2.py"
+                    clean_data = data.replace("FILE_LIST", "").strip()
+                    if clean_data:
+                        files = clean_data.split("\n")
+                        self.after(0, lambda f=files: self._display_file_buttons(f))
                     continue
 
-                # --------------------- FILE DOWNLOAD HANDLING ---------------- #
+                # --- PROTOCOL: DOWNLOAD START ---
                 if data.startswith("FILE_SIZE:"):
-                    filesize = int(data.split(":")[1])
-
-                    # Send ACK to server
-                    self.client_socket.sendall(b"ACK")
-
-                    # Receive file bytes
-                    file_bytes = b""
-                    remaining = filesize
-
-                    while remaining > 0:
-                        chunk = self.client_socket.recv(min(4096, remaining))
-                        if not chunk:
-                            break
-                        file_bytes += chunk
-                        remaining -= len(chunk)
-
-                    # Convert to text safely
                     try:
-                        text = file_bytes.decode()
-                    except:
-                        text = file_bytes.decode("utf-8", errors="replace")
+                        filesize = int(data.split(":")[1])
+                        
+                        # Send ACK to server so it knows to start sending bytes
+                        self.client_socket.sendall(b"ACK")
 
-                    # Open popup UI viewer
-                    self._show_file_viewer("Downloaded File", text)
+                        # Read exact bytes
+                        file_bytes = b""
+                        remaining = filesize
+                        
+                        while remaining > 0 and not self.stop_threads:
+                            chunk = self.client_socket.recv(min(4096, remaining))
+                            if not chunk: break
+                            file_bytes += chunk
+                            remaining -= len(chunk)
 
+                        # Show the file content
+                        try:
+                            content = file_bytes.decode('utf-8')
+                        except:
+                            content = file_bytes.decode('utf-8', errors='replace')
+                            
+                        self.after(0, lambda c=content: self._show_file_viewer("Downloaded File", c))
+
+                    except ValueError:
+                        print("Error parsing file size")
                     continue
 
-                print("[SERVER]:", data)
-
+        except OSError:
+            pass # Socket closed
         except Exception as e:
-            print("Receive error:", e)
+            print(f"Receive error: {e}")
+        finally:
+            # If loop breaks (server disconnected), update UI
+            if not self.stop_threads:
+                self.after(0, lambda: self.is_connected.set(False))
 
     def _display_file_buttons(self, files):
         # Clear old file buttons
@@ -285,21 +299,35 @@ class DashboardPage(ctk.CTkFrame):
 
         # Create a button for each file
         for filename in files:
+            if not filename.strip(): continue
             btn = ctk.CTkButton(
                 self.files_container,
                 text=filename,
-                width=600,
+                width=500,
                 fg_color="#1E3A5F",
                 hover_color="#00B0FF",
-                command=lambda f=filename: self.client_socket.sendall(f"GET_FILE:{f}".encode())
+                command=lambda f=filename: self._request_file(f)
             )
             btn.pack(pady=5)
+
+    def _request_file(self, filename):
+        if self.client_socket:
+            try:
+                # Protocol: GET_FILE:filename
+                msg = f"GET_FILE:{filename}"
+                self.client_socket.sendall(msg.encode())
+            except Exception as e:
+                print(f"Send error: {e}")
 
     def _show_file_viewer(self, filename, content):
         viewer = ctk.CTkToplevel(self)
         viewer.title(f"Viewing: {filename}")
         viewer.geometry("700x600")
         viewer.configure(fg_color="#0A1A2B")
+        
+        # Bring to front
+        viewer.attributes('-topmost', True)
+        viewer.after(100, lambda: viewer.attributes('-topmost', False))
 
         title = ctk.CTkLabel(
             viewer,
@@ -323,3 +351,18 @@ class DashboardPage(ctk.CTkFrame):
 
         textbox.insert("0.0", content)
         textbox.configure(state="disabled")  # Read-only
+
+# ------------------ MAIN APP WRAPPER ------------------ #
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("Nova Link VPN Client")
+        self.geometry("1400x900")
+        
+        # Initialize the Dashboard Page
+        self.dashboard = DashboardPage(self, self)
+        self.dashboard.pack(fill="both", expand=True)
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
