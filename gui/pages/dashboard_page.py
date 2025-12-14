@@ -27,6 +27,10 @@ class DashboardPage(ctk.CTkFrame):
         # Connection State
         self.is_connected = ctk.BooleanVar(value=False)
         self.current_server = ctk.StringVar(value=SERVERS[0] if SERVERS else "")
+        
+        # Packet Counters
+        self.pkts_sent = 0
+        self.pkts_recv = 0
 
         # Grid Config
         self.grid_rowconfigure(0, weight=1)
@@ -86,7 +90,7 @@ class DashboardPage(ctk.CTkFrame):
             card, text="LOGOUT", width=600, height=60, corner_radius=30,
             fg_color="#F44336", hover_color="#D32F2F",
             font=ctk.CTkFont(size=22, weight="bold"),
-            command=lambda: print("Logout clicked!")
+            command=lambda: self.controller.show_page("StartupPage")
         )
         self.logout_button.pack(pady=(0, 20))
 
@@ -113,7 +117,7 @@ class DashboardPage(ctk.CTkFrame):
             status_section,
             fg_color="transparent"
         )
-        status_container.pack(pady=(50, 20))
+        status_container.pack(pady=(50, 10))
 
         # Status Circle
         self.status_circle = ctk.CTkLabel(
@@ -133,6 +137,29 @@ class DashboardPage(ctk.CTkFrame):
         )
         self.status_label.pack(side="left")
 
+        # --- NEW: Packet Counters Frame ---
+        self.stats_frame = ctk.CTkFrame(status_section, fg_color="#1E3A5F", corner_radius=15)
+        self.stats_frame.pack(pady=(10, 20), padx=20, fill="x")
+
+        # Sent Label
+        self.lbl_sent = ctk.CTkLabel(
+            self.stats_frame, 
+            text="Sent: 0", 
+            font=ctk.CTkFont(size=14, family="Consolas"), 
+            text_color="#4FC3F7"
+        )
+        self.lbl_sent.pack(side="left", padx=20, pady=10)
+
+        # Received Label
+        self.lbl_recv = ctk.CTkLabel(
+            self.stats_frame, 
+            text="Recv: 0", 
+            font=ctk.CTkFont(size=14, family="Consolas"), 
+            text_color="#69F0AE"
+        )
+        self.lbl_recv.pack(side="right", padx=20, pady=10)
+        # ----------------------------------
+
         # Accessible Files Label
         self.files_label = ctk.CTkLabel(
             status_section,
@@ -151,6 +178,17 @@ class DashboardPage(ctk.CTkFrame):
             fg_color="transparent"
         )
         # Hidden by default
+
+    # ------------------ HELPER: UPDATE STATS UI ------------------ #
+    def _update_pkt_ui(self):
+        """Updates the packet counters on the UI safely from threads"""
+        def format_bytes(n):
+            if n < 1024: return f"{n} B"
+            elif n < 1024**2: return f"{n/1024:.1f} KB"
+            else: return f"{n/1024**2:.1f} MB"
+
+        self.lbl_sent.configure(text=f"Sent: {format_bytes(self.pkts_sent)}")
+        self.lbl_recv.configure(text=f"Recv: {format_bytes(self.pkts_recv)}")
 
     # ------------------ CONNECTION BINDINGS ------------------ #
     def _setup_connection_bindings(self):
@@ -196,6 +234,11 @@ class DashboardPage(ctk.CTkFrame):
         else:
             # Connect Logic
             self.stop_threads = False
+            # Reset counters
+            self.pkts_sent = 0
+            self.pkts_recv = 0
+            self._update_pkt_ui()
+            
             threading.Thread(target=self._connect_process, daemon=True).start()
 
     def _connect_process(self):
@@ -240,7 +283,13 @@ class DashboardPage(ctk.CTkFrame):
         try:
             while not self.stop_threads:
                 # Basic receive
-                data = self.client_socket.recv(1024).decode(errors="ignore")
+                data_bytes = self.client_socket.recv(1024)
+                if len(data_bytes) > 0:
+                    self.pkts_recv += len(data_bytes)
+                    self.after(0, self._update_pkt_ui)
+                # -------------------------
+                
+                data = data_bytes.decode(errors="ignore")
                 if not data:
                     break
 
@@ -260,6 +309,11 @@ class DashboardPage(ctk.CTkFrame):
                         
                         # Send ACK to server so it knows to start sending bytes
                         self.client_socket.sendall(b"ACK")
+                        
+                        # --- PACKET SENT COUNT ---
+                        self.pkts_sent += 1
+                        self.after(0, self._update_pkt_ui)
+                        # -------------------------
 
                         # Read exact bytes
                         file_bytes = b""
@@ -268,6 +322,12 @@ class DashboardPage(ctk.CTkFrame):
                         while remaining > 0 and not self.stop_threads:
                             chunk = self.client_socket.recv(min(4096, remaining))
                             if not chunk: break
+                            
+                            # --- PACKET RECV COUNT (CHUNK) ---
+                            self.pkts_recv += len(chunk)
+                            self.after(0, self._update_pkt_ui)
+                            # ---------------------------------
+                            
                             file_bytes += chunk
                             remaining -= len(chunk)
 
@@ -316,6 +376,12 @@ class DashboardPage(ctk.CTkFrame):
                 # Protocol: GET_FILE:filename
                 msg = f"GET_FILE:{filename}"
                 self.client_socket.sendall(msg.encode())
+                
+                # --- PACKET SENT COUNT ---
+                self.pkts_sent += len(msg.encode())
+                self.after(0, self._update_pkt_ui)
+                # -------------------------
+                
             except Exception as e:
                 print(f"Send error: {e}")
 
